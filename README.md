@@ -1,4 +1,8 @@
-# medder
+<h1> Medder -> Medicine Reminder </h1>
+
+
+
+<!-- # medder
 
 Medder, short for Medicine Reminder. it'll remind you if you have already taken medicine or not. just click at it an you're done
 
@@ -14,3 +18,4 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+ -->
