@@ -1,5 +1,9 @@
 <h1> Medder -> Medicine Reminder </h1>
 
+<p> Some disease needs take just 1 per day. if you take it more than once, it may be cause any problem.  Allopurinol, in example. <br>
+ 
+ this application has a purpose to remind you if you have take it or not, for now, it just take a simple click. but just wait for another update
+ for another features !! </p>
 
 
 <!-- # medder
