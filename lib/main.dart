@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -27,36 +26,38 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   bool isMed = false;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<int> _lastTime;
   late int time;
 
-  Future<void> handlepress() async{
+  Future<void> handlepress() async {
     final prefs = await _prefs;
 
     setState(() {
-      _lastTime = prefs.setInt("gaga", time).then((bool succes) => time);
-      isMed = !isMed;
+      if (isMed == false) {
+        _lastTime = prefs.setInt("gaga", time).then((bool succes) => time);
+        isMed = !isMed;
+      } else {
+        isMed = !isMed;
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _lastTime = _prefs.then((SharedPreferences pref){
+    _lastTime = _prefs.then((SharedPreferences pref) {
       return pref.getInt("gaga") ?? 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     final minutes = DateTime.now().minute;
     final hours = DateTime.now().hour;
     final seconds = DateTime.now().second;
-    time = (hours * 3600) + (minutes * 60)  + seconds;
+    time = (hours * 3600) + (minutes * 60) + seconds;
 
     return Scaffold(
       appBar: AppBar(
@@ -81,35 +82,62 @@ class _HomeState extends State<Home> {
               children: [
                 FutureBuilder<int>(
                   future: _lastTime,
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot){
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                     final data = snapshot.data ?? 0;
                     final h = data ~/ 3600;
                     final m = ((data / 60) - (h * 60)).toInt();
                     final s = data % 60;
 
-                    return Text("Your Last Take = ${h < 10 ? "0$h" : h }:${m < 10 ? "0$m" : m}:${s < 10 ? "0$s" : s}");
+                    return Text(
+                        "Your Last Take = ${h < 10 ? "0$h" : h}:${m < 10 ? "0$m" : m}:${s < 10 ? "0$s" : s}");
                   },
                 ),
                 Text("Live time (H:M:S) = $hours:$minutes:$seconds"),
                 Text("Live data = $time"),
                 Text("Live Time : ${DateTime.now()}"),
-                const SizedBox(height: 20.0,),
+                const SizedBox(
+                  height: 20.0,
+                ),
                 ElevatedButton(
                   child: const Icon(
                     Icons.add_task,
                   ),
-                  onPressed: (){
-                    handlepress();
+                  onPressed: () {
+                    if (isMed == true) {
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text("Are you sure?"),
+                          content: const Text("you might forget soon"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  handlepress();
+                                  return Navigator.pop(context, 'OK');
+                                },
+                                child: const Text("Yes")),
+                            TextButton(
+                                onPressed: () => Navigator.pop(context, 'Cancel'),
+                                child: const Text("No")),
+                          ],
+                        ),
+                      );
+                    }
+                    else{
+                      handlepress();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
                     padding: const EdgeInsets.all(20.0),
                   ),
                 ),
-                const SizedBox(height: 20.0,),
-                Text(
-                  isMed ? "You Have Taken Medicine ! " : "You haven't take your med."
-                )
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Text(isMed
+                    ? "You Have Taken Medicine ! "
+                    : "You haven't take your med.")
               ],
             ),
           ),
@@ -118,5 +146,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
