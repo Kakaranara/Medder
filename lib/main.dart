@@ -79,14 +79,19 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Your Last Take : $time"),
                 FutureBuilder<int>(
                   future: _lastTime,
                   builder: (BuildContext context, AsyncSnapshot<int> snapshot){
-                    return Text("Snapshot : ${snapshot.data}");
+                    final data = snapshot.data ?? 0;
+                    final h = data ~/ 3600;
+                    final m = ((data / 60) - (h * 60)).toInt();
+                    final s = data % 60;
+
+                    return Text("Your Last Take = $h:$m:$s");
                   },
                 ),
-                Text("Live time (second)  : $time"),
+                Text("Live time (J: M : S) = $hours:$minutes:$seconds"),
+                Text("Live data = $time"),
                 Text("Live Time : ${DateTime.now()}"),
                 const SizedBox(height: 20.0,),
                 ElevatedButton(
@@ -101,7 +106,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.all(20.0),
                   ),
                 ),
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
                 Text(
                   isMed ? "You Have Taken Medicine ! " : "You haven't take your med."
                 )
