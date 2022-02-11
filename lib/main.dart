@@ -87,10 +87,10 @@ class _HomeState extends State<Home> {
                     final m = ((data / 60) - (h * 60)).toInt();
                     final s = data % 60;
 
-                    return Text("Your Last Take = $h:$m:$s");
+                    return Text("Your Last Take = ${h < 10 ? "0$h" : h }:${m < 10 ? "0$m" : m}:${s < 10 ? "0$s" : s}");
                   },
                 ),
-                Text("Live time (J: M : S) = $hours:$minutes:$seconds"),
+                Text("Live time (H:M:S) = $hours:$minutes:$seconds"),
                 Text("Live data = $time"),
                 Text("Live Time : ${DateTime.now()}"),
                 const SizedBox(height: 20.0,),
