@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<int> _lastTime;
   late int time;
+  late int pastTimeValue;
 
   Future<void> handlepress() async {
     final prefs = await _prefs;
@@ -50,6 +51,11 @@ class _HomeState extends State<Home> {
     _lastTime = _prefs.then((SharedPreferences pref) {
       return pref.getInt("gaga") ?? 0;
     });
+
+    SharedPreferences.getInstance().then((pref) => pref.getBool("isMed") ?? false);
+
+
+    pastTimeValue = 0;
   }
 
   @override
@@ -58,6 +64,8 @@ class _HomeState extends State<Home> {
     final hours = DateTime.now().hour;
     final seconds = DateTime.now().second;
     time = (hours * 3600) + (minutes * 60) + seconds;
+
+    final outputPastValue = time - pastTimeValue ;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,6 +92,7 @@ class _HomeState extends State<Home> {
                   future: _lastTime,
                   builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                     final data = snapshot.data ?? 0;
+                    pastTimeValue = data;
                     final h = data ~/ 3600;
                     final m = ((data / 60) - (h * 60)).toInt();
                     final s = data % 60;
@@ -92,6 +101,7 @@ class _HomeState extends State<Home> {
                         "Your Last Take = ${h < 10 ? "0$h" : h}:${m < 10 ? "0$m" : m}:${s < 10 ? "0$s" : s}");
                   },
                 ),
+                Text("You have clicked $outputPastValue seconds ago"),
                 Text("Live time (H:M:S) = $hours:$minutes:$seconds"),
                 Text("Live data = $time"),
                 Text("Live Time : ${DateTime.now()}"),
